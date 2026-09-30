@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=00d4aa&height=200&section=header&text=ReturnIt&fontSize=80&fontColor=ffffff&fontAlignY=35&desc=Lost%20%26%20Found%20Portal&descAlignY=55&descSize=22&animation=fadeIn" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=00d4aa&height=200&section=header&text=ReturnIt&fontSize=80&fontColor=ffffff&fontAlignY=35&desc=Lost+and+Found+Portal&descAlignY=55&descSize=22&animation=fadeIn" width="100%"/>
 
 <br/>
 
@@ -8,15 +8,15 @@
 
 <br/>
 
-[![Live Demo](https://img.shields.io/badge/🌐_Live_App-Open_Now-00d4aa?style=for-the-badge&labelColor=060d1f)](https://heartfelt-cajeta-4226cf.netlify.app)
+[![Live Demo](https://img.shields.io/badge/Live_App-Open_Now-00d4aa?style=for-the-badge&labelColor=060d1f)](https://heartfelt-cajeta-4226cf.netlify.app)
 &nbsp;
-[![Project Page](https://img.shields.io/badge/📖_Project_Page-View-1a2d50?style=for-the-badge&labelColor=060d1f)](https://himani-aiml.github.io/returnit-lost-and-found)
+[![Project Page](https://img.shields.io/badge/Project_Page-View-1a2d50?style=for-the-badge&labelColor=060d1f)](https://himani-aiml.github.io/returnit-lost-and-found)
 &nbsp;
-[![GitHub](https://img.shields.io/badge/⭐_Star_this_repo-060d1f?style=for-the-badge&labelColor=060d1f)](https://github.com/himani-aiml/returnit-lost-and-found)
+[![GitHub](https://img.shields.io/badge/Star_this_repo-060d1f?style=for-the-badge&labelColor=060d1f&logo=github)](https://github.com/himani-aiml/returnit-lost-and-found)
 
 <br/>
 
-![Made with React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
+![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Gemini_API-4285F4?style=flat-square&logo=google&logoColor=white)
@@ -26,7 +26,7 @@
 
 ---
 
-## 🤔 What is ReturnIt?
+## What is ReturnIt?
 
 > Every day in schools, hospitals, and public spaces — people lose wallets, phones, ID cards, keys — with **no digital system** to report or search for them.
 
@@ -39,19 +39,21 @@ No app download. No account needed. Just open and use.
 
 ---
 
-## ✨ Features
+## Features
 
 <table>
 <tr>
 <td>
 
-**📋 Report Items**
+**Report Items**
+
 Fill a quick form — item name, category, location, date, contact. Done.
 
 </td>
 <td>
 
-**🔍 Smart Search**
+**Smart Search**
+
 Search by keyword, filter by category or Lost/Found type. Instant results.
 
 </td>
@@ -59,13 +61,15 @@ Search by keyword, filter by category or Lost/Found type. Instant results.
 <tr>
 <td>
 
-**🤖 AI Matching**
-Gemini API compares your item against everything reported and returns top 3 matches with a % score and reason.
+**AI Matching**
+
+Gemini API compares your item against everything reported and returns top 3 matches with a percentage score and reason.
 
 </td>
 <td>
 
-**📱 Works Everywhere**
+**Works Everywhere**
+
 Fully mobile responsive. Opens perfectly on any phone, tablet, or laptop.
 
 </td>
@@ -74,7 +78,7 @@ Fully mobile responsive. Opens perfectly on any phone, tablet, or laptop.
 
 ---
 
-## 🤖 The AI Matching — How It Works
+## The AI Matching — How It Works
 
 ```
 User clicks "Find AI Matches" on any item
@@ -89,11 +93,11 @@ Returns Top 3 Matches
 with match % and plain-English reason
 ```
 
-> 💡 **Example:** A "black leather wallet" can match a "dark brown card holder" — because Gemini understands context, not just keywords.
+> **Example:** A "black leather wallet" can match a "dark brown card holder" — because Gemini understands context, not just keywords.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Tool | Why |
 |-------|------|-----|
@@ -107,13 +111,13 @@ with match % and plain-English reason
 
 ---
 
-## 🗂️ Item Categories
+## Item Categories
 
-`Wallet` &nbsp; `Phone` &nbsp; `Keys` &nbsp; `Bag` &nbsp; `Laptop` &nbsp; `ID Card` &nbsp; `Clothing` &nbsp; `Electronics` &nbsp; `Other`
+`Wallet` `Phone` `Keys` `Bag` `Laptop` `ID Card` `Clothing` `Electronics` `Other`
 
 ---
 
-## 🚀 Run Locally
+## Quick Start
 
 ```bash
 # Clone the repo
@@ -134,7 +138,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 returnit/
@@ -144,8 +148,8 @@ returnit/
 │   │   ├── ActionCards.tsx   ← Report Lost/Found buttons
 │   │   ├── StatsRow.tsx      ← Live item counters
 │   │   ├── ItemCard.tsx      ← Item display cards
-│   │   ├── ReportForm.tsx    ← Lost & Found forms
-│   │   ├── BrowseView.tsx    ← Search & filter page
+│   │   ├── ReportForm.tsx    ← Lost and Found forms
+│   │   ├── BrowseView.tsx    ← Search and filter page
 │   │   └── DetailView.tsx    ← Item detail + AI match
 │   ├── App.tsx               ← Main routing
 │   ├── types.ts              ← TypeScript types
@@ -156,22 +160,22 @@ returnit/
 
 ---
 
-## 🔗 Links
+## Live Links
 
 | | |
 |---|---|
-| 🌐 **Live App** | https://heartfelt-cajeta-4226cf.netlify.app |
-| 📖 **Project Page** | https://himani-aiml.github.io/returnit-lost-and-found |
-| 💻 **GitHub** | https://github.com/himani-aiml/returnit-lost-and-found |
+| **Live App** | https://heartfelt-cajeta-4226cf.netlify.app |
+| **Project Page** | https://himani-aiml.github.io/returnit-lost-and-found |
+| **GitHub** | https://github.com/himani-aiml/returnit-lost-and-found |
 
 ---
 
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=00d4aa&height=100&section=footer&reversal=false" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=00d4aa&height=100&section=footer" width="100%"/>
 
-**Built by Himani** &nbsp;·&nbsp; DAV Institute of Engineering and Technology &nbsp;·&nbsp; CSE
+**Built by Himani** · DAV Institute of Engineering and Technology · CSE
 
-*If this helped you, drop a ⭐ on the repo!*
+*If this helped you, drop a star on the repo!*
 
 </div>
