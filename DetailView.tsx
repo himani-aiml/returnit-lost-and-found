@@ -1,3 +1,6 @@
+// AI Matching powered by Google Gemini API
+// Compares lost vs found items and returns top 3 matches
+
 import React, { useState } from 'react';
 import { Item, AiMatchResult } from '../types';
 import { findAiMatches } from '../aiService';
