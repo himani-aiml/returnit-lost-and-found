@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# ReturnIt 🔍
+### Smart Lost & Found Portal
 
-# Run and deploy your AI Studio app
+A web application that helps people report lost or 
+found items and get AI-powered match suggestions.
 
-This contains everything you need to run your app locally.
+## 🌐 Live Demo
+[heartfelt-cajeta-4226cf.netlify.app](https://heartfelt-cajeta-4226cf.netlify.app)
 
-View your app in AI Studio: https://ai.studio/apps/11f8b072-8e1a-4ba9-aaa5-db510761970c
+## ✨ Features
+- Report lost or found items with full details
+- Real-time search and category filters  
+- AI-powered smart matching using Google Gemini API
+- Mobile responsive design
+- Persistent storage with localStorage
 
-## Run Locally
+## 🛠️ Tech Stack
+- React + TypeScript + Vite
+- Google Gemini API (AI matching)
+- Google Stitch (UI Design)
+- Netlify (Deployment)
 
-**Prerequisites:**  Node.js
+## 🚀 Run Locally
+npm install
+npm run dev
 
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 📁 Categories Supported
+Wallet, Phone, Keys, Bag, Laptop, 
+ID Card, Clothing, Electronics, Other
