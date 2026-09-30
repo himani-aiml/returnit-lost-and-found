@@ -1,19 +1,913 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>ReturnIt — Lost & Found Portal</title>
-    <meta name="description" content="Lost & Found portal with AI-powered matchmaking to connect people with their lost belongings across campuses, hospitals, and transit hubs." />
-    <meta property="og:title" content="ReturnIt — Lost & Found Portal" />
-    <meta property="og:description" content="Lost & Found portal with AI-powered matchmaking to connect people with their lost belongings across campuses, hospitals, and transit hubs." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
-  </head>
-  <body class="bg-slate-100 text-slate-900 antialiased min-h-screen">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ReturnIt — Lost & Found Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #060d1f;
+  --navy2:   #0d1b35;
+  --navy3:   #112040;
+  --teal:    #00d4aa;
+  --teal2:   #00b892;
+  --teal-dim:#00d4aa22;
+  --lost:    #ff4d6d;
+  --found:   #00d4aa;
+  --white:   #f0f6ff;
+  --muted:   #8899bb;
+  --border:  #1a2d50;
+}
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0 60px;
+  position: relative;
+}
+
+/* glow blob */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: -200px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #00d4aa18 0%, transparent 70%);
+  pointer-events: none;
+  animation: blobpulse 6s ease-in-out infinite;
+}
+
+@keyframes blobpulse {
+  0%, 100% { transform: scale(1) translate(0,0); opacity: .7; }
+  50%       { transform: scale(1.12) translate(-30px, 20px); opacity: 1; }
+}
+
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+  opacity: 0;
+  animation: fadeUp .6s .1s forwards;
+}
+
+.logo-icon {
+  width: 52px; height: 52px;
+  background: var(--teal-dim);
+  border: 1.5px solid var(--teal);
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  animation: iconpulse 3s ease-in-out infinite;
+}
+
+@keyframes iconpulse {
+  0%,100% { box-shadow: 0 0 0 0 #00d4aa40; }
+  50%      { box-shadow: 0 0 0 10px #00d4aa00; }
+}
+
+.logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+
+.logo-text span { color: var(--teal); }
+
+.live-badge {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #00d4aa12;
+  border: 1px solid #00d4aa40;
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 12px;
+  color: var(--teal);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background .2s;
+}
+.live-badge:hover { background: #00d4aa20; }
+.live-dot {
+  width: 7px; height: 7px;
+  background: var(--teal);
+  border-radius: 50%;
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.hero-eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: fadeUp .6s .25s forwards;
+}
+
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(38px, 7vw, 68px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp .7s .35s forwards;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--teal);
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp .7s .5s forwards;
+}
+
+/* animated search demo */
+.search-demo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--navy2);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  max-width: 520px;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp .7s .65s forwards;
+  transition: border-color .3s;
+}
+.search-demo:hover { border-color: var(--teal); }
+.search-icon { font-size: 18px; }
+.search-text { font-size: 15px; color: var(--muted); }
+.search-cursor {
+  width: 2px; height: 18px;
+  background: var(--teal);
+  border-radius: 2px;
+  animation: blink .9s step-end infinite;
+  flex-shrink: 0;
+}
+
+/* pill buttons */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp .7s .8s forwards;
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: var(--navy);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity .2s, transform .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover { opacity: .85; transform: translateY(-1px); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  text-decoration: none;
+  transition: border-color .2s, transform .2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-ghost:hover { border-color: var(--teal); transform: translateY(-1px); }
+
+/* ── DIVIDER ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 64px 0;
+}
+
+/* ── SECTION TITLE ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -.5px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.section-sub {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+/* ── PROBLEM BLOCK ── */
+.problem-block {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.problem-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--lost);
+}
+
+.problem-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.problem-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.problem-list li strong { color: var(--white); display: block; margin-bottom: 2px; font-size: 15px; }
+.problem-icon {
+  width: 34px; height: 34px;
+  background: #ff4d6d15;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── HOW IT WORKS ── */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 40px;
+  bottom: 40px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--teal), transparent);
+}
+
+.step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+
+.step-num {
+  width: 40px; height: 40px;
+  background: var(--teal-dim);
+  border: 1.5px solid var(--teal);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--teal);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.step-body h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: -.2px;
+}
+.step-body p { color: var(--muted); font-size: 15px; line-height: 1.6; }
+.step-tag {
+  display: inline-block;
+  background: var(--teal-dim);
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-top: 8px;
+  letter-spacing: .5px;
+}
+
+/* ── FEATURES GRID ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.feat-card {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  transition: border-color .25s, transform .25s;
+}
+.feat-card:hover {
+  border-color: var(--teal);
+  transform: translateY(-3px);
+}
+.feat-icon {
+  width: 40px; height: 40px;
+  background: var(--teal-dim);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+}
+.feat-card h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.feat-card p { color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+
+/* ── TECH STACK ── */
+.tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.tech-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: border-color .2s;
+}
+.tech-pill:hover { border-color: var(--teal); }
+.tech-pill span:first-child { font-size: 16px; }
+
+/* ── CATEGORIES ── */
+.cat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cat-tag {
+  background: var(--navy3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── BONUS BLOCK ── */
+.bonus-block {
+  background: linear-gradient(135deg, #00d4aa0f, #00d4aa05);
+  border: 1px solid #00d4aa30;
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.bonus-icon { font-size: 32px; flex-shrink: 0; }
+.bonus-block h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+.bonus-block p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+
+/* ── QUICK START ── */
+.code-block {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 2;
+  position: relative;
+  overflow-x: auto;
+}
+.code-block .comment { color: #4a6080; }
+.code-block .cmd { color: var(--teal); }
+.code-block .str { color: #ffd580; }
+
+/* ── FOOTER ── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 48px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.footer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.footer-name span { color: var(--teal); }
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color .2s;
+}
+.footer-links a:hover { color: var(--teal); }
+.footer-bottom {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ── LOST/FOUND BADGES ── */
+.badge-lost {
+  background: #ff4d6d18;
+  color: var(--lost);
+  border: 1px solid #ff4d6d30;
+  border-radius: 100px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-found {
+  background: #00d4aa18;
+  color: var(--found);
+  border: 1px solid #00d4aa30;
+  border-radius: 100px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── REVEAL ANIMATION ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .bonus-block { flex-direction: column; gap: 12px; }
+  .footer-top { flex-direction: column; }
+  .live-badge { margin-left: 0; }
+  .logo-row { flex-wrap: wrap; }
+  .steps::before { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+<div class="wrap">
+
+  <div class="logo-row">
+    <div class="logo-icon">🔍</div>
+    <div class="logo-text">Return<span>It</span></div>
+    <a class="live-badge" href="https://heartfelt-cajeta-4226cf.netlify.app" target="_blank">
+      <div class="live-dot"></div>
+      Live Demo
+    </a>
+  </div>
+
+  <p class="hero-eyebrow">Lost &amp; Found Portal</p>
+
+  <h1>
+    Stop losing<br>
+    things <em>forever.</em>
+  </h1>
+
+  <p class="hero-sub">
+    ReturnIt is a smart web portal where anyone can report a lost or found
+    item — and let AI figure out the match. Built for schools, hospitals,
+    offices, and every place in between.
+  </p>
+
+  <div class="search-demo">
+    <span class="search-icon">🔎</span>
+    <span class="search-text" id="searchTyping">Search for a lost item...</span>
+    <div class="search-cursor"></div>
+  </div>
+
+  <div class="btn-row">
+    <a class="btn-primary" href="https://heartfelt-cajeta-4226cf.netlify.app" target="_blank">
+      ↗ Open Live App
+    </a>
+    <a class="btn-ghost" href="#how-it-works">
+      See how it works
+    </a>
+  </div>
+
+</div>
+</section>
+
+<!-- PROBLEM -->
+<section>
+<div class="wrap">
+  <hr class="divider">
+
+  <div class="reveal">
+    <p class="section-label">The Problem</p>
+    <h2 class="section-title">Things get lost.<br>They rarely get found.</h2>
+    <p class="section-sub">
+      Every day in schools, hospitals, and public spaces — people lose
+      wallets, phones, keys, ID cards — with no system to report or
+      search for them. The person who found your item has no way to reach
+      you. You have no way to know it's even been found.
+    </p>
+  </div>
+
+  <div class="problem-block reveal">
+    <ul class="problem-list">
+      <li>
+        <div class="problem-icon">❌</div>
+        <div>
+          <strong>No reporting system</strong>
+          No digital way to formally report a lost or found item anywhere.
+        </div>
+      </li>
+      <li>
+        <div class="problem-icon">🔍</div>
+        <div>
+          <strong>No way to search</strong>
+          Even if someone found your item, you'd never know to look for it.
+        </div>
+      </li>
+      <li>
+        <div class="problem-icon">📭</div>
+        <div>
+          <strong>No notifications</strong>
+          No one tells the owner when a matching item shows up — ever.
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+<div class="wrap">
+
+  <div class="reveal">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">Four steps.<br>One resolution.</h2>
+    <p class="section-sub">
+      ReturnIt keeps it simple. No accounts needed, no complicated
+      forms — just report, search, match, and connect.
+    </p>
+  </div>
+
+  <div class="steps reveal">
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Report your item</h3>
+        <p>Fill in the item name, description, category, where it was lost
+           or found, and the date. Takes under a minute.</p>
+        <div>
+          <span class="badge-lost">Lost</span>&nbsp;
+          <span class="badge-found">Found</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Browse and search</h3>
+        <p>Anyone can browse all reported items, search by keyword, and
+           filter by category or type in real time.</p>
+        <span class="step-tag">Instant results</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Let AI find matches</h3>
+        <p>Hit "Find AI Matches" on any item and Google Gemini compares it
+           against everything reported — returning the top 3 matches with
+           a match percentage and a clear reason why they match.</p>
+        <span class="step-tag">✨ Powered by Gemini API</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Connect and resolve</h3>
+        <p>Contact details are shown directly so the owner and finder
+           can connect and close the case.</p>
+        <span class="step-tag">Case closed</span>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+</div>
+</section>
+
+<!-- AI BONUS -->
+<section>
+<div class="wrap">
+
+  <div class="bonus-block reveal">
+    <div class="bonus-icon">🤖</div>
+    <div>
+      <h3>AI Matching — the core differentiator</h3>
+      <p>
+        Most lost &amp; found systems just let you post and hope. ReturnIt
+        uses <strong style="color:var(--white)">Google Gemini API</strong>
+        to intelligently compare a lost item against all found items —
+        considering synonyms, category, location, and date — and returns
+        ranked matches with a human-readable explanation. A black wallet
+        can match a "dark leather card holder." That's the difference.
+      </p>
+    </div>
+  </div>
+
+  <hr class="divider">
+</div>
+</section>
+
+<!-- FEATURES -->
+<section>
+<div class="wrap">
+
+  <div class="reveal">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+  </div>
+
+  <div class="features-grid reveal">
+    <div class="feat-card">
+      <div class="feat-icon">📱</div>
+      <h3>Mobile responsive</h3>
+      <p>Works perfectly on any phone, tablet, or desktop — no app download needed.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <h3>Real-time search</h3>
+      <p>Instant results as you type — searches across title and full description.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🗂️</div>
+      <h3>9 item categories</h3>
+      <p>Wallet, Phone, Keys, Bag, Laptop, ID Card, Clothing, Electronics, Other.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <h3>Gemini AI matching</h3>
+      <p>Top 3 matches with percentage score and plain-language reasoning.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💾</div>
+      <h3>No login required</h3>
+      <p>Everything stored in localStorage — open and use instantly, no account.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🎨</div>
+      <h3>Clean interface</h3>
+      <p>Designed with Google Stitch. Clear red for lost, green for found.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+</div>
+</section>
+
+<!-- TECH STACK -->
+<section>
+<div class="wrap">
+
+  <div class="reveal">
+    <p class="section-label">Tech Stack</p>
+    <h2 class="section-title">Built with modern tools.</h2>
+    <p class="section-sub">
+      Every tool was chosen for speed, reliability, and to show what's
+      possible when AI assists the full development pipeline.
+    </p>
+  </div>
+
+  <div class="tech-row reveal">
+    <div class="tech-pill"><span>⚛️</span> React</div>
+    <div class="tech-pill"><span>🔷</span> TypeScript</div>
+    <div class="tech-pill"><span>⚡</span> Vite</div>
+    <div class="tech-pill"><span>🤖</span> Google Gemini API</div>
+    <div class="tech-pill"><span>🎨</span> Google Stitch</div>
+    <div class="tech-pill"><span>⚙️</span> Google AI Studio</div>
+    <div class="tech-pill"><span>🚀</span> Netlify</div>
+    <div class="tech-pill"><span>💻</span> Antigravity CLI</div>
+    <div class="tech-pill"><span>💾</span> localStorage</div>
+  </div>
+
+  <hr class="divider">
+</div>
+</section>
+
+<!-- QUICK START -->
+<section>
+<div class="wrap">
+
+  <div class="reveal">
+    <p class="section-label">Quick Start</p>
+    <h2 class="section-title">Run it locally.</h2>
+  </div>
+
+  <div class="code-block reveal">
+    <span class="comment"># clone the repo</span><br>
+    <span class="cmd">git clone</span> <span class="str">https://github.com/your-username/returnit-lost-and-found</span><br>
+    <span class="cmd">cd</span> returnit-lost-and-found<br><br>
+    <span class="comment"># install dependencies</span><br>
+    <span class="cmd">npm install</span><br><br>
+    <span class="comment"># add your Gemini API key in .env</span><br>
+    <span class="str">VITE_GEMINI_API_KEY</span>=your_key_here<br><br>
+    <span class="comment"># start dev server</span><br>
+    <span class="cmd">npm run dev</span>
+  </div>
+
+  <hr class="divider">
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="wrap">
+  <div class="footer">
+    <div class="footer-top">
+      <div class="footer-name">Return<span>It</span></div>
+      <div class="footer-links">
+        <a href="https://heartfelt-cajeta-4226cf.netlify.app" target="_blank">↗ Live App</a>
+        <a href="#">GitHub</a>
+        <a href="https://www.linkedin.com/in/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Built by <strong style="color:var(--white)">Himani</strong> — DAV Institute of Engineering and Technology &nbsp;·&nbsp;
+      S4i Hackathon 2026
+    </div>
+  </div>
+</div>
+</footer>
+
+<script>
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+reveals.forEach(r => observer.observe(r));
+
+// ── Animated search bar ──
+const phrases = [
+  'Black leather wallet…',
+  'iPhone 14 Pro, blue case…',
+  'Silver key bunch…',
+  'Student ID card…',
+  'Blue water bottle…',
+  'Dell laptop charger…',
+];
+let pi = 0, ci = 0, deleting = false;
+const el = document.getElementById('searchTyping');
+function typeLoop() {
+  const phrase = phrases[pi];
+  if (!deleting) {
+    el.textContent = phrase.slice(0, ++ci);
+    if (ci === phrase.length) { deleting = true; setTimeout(typeLoop, 1600); return; }
+    setTimeout(typeLoop, 55);
+  } else {
+    el.textContent = phrase.slice(0, --ci);
+    if (ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(typeLoop, 300); return; }
+    setTimeout(typeLoop, 28);
+  }
+}
+typeLoop();
+</script>
+</body>
+</html>
